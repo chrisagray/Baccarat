@@ -10,7 +10,6 @@ import UIKit
 class ViewController: UIViewController {
     @IBOutlet weak var baccaratSimLabel: UILabel!
     @IBOutlet weak var simulateButton: UIButton!
-    @IBOutlet weak var bankrollLabel: UILabel!
     @IBOutlet weak var spinner: UIActivityIndicatorView!
     @IBOutlet weak var bankrollTextField: UITextField!
     @IBOutlet weak var shoesTextField: UITextField!
@@ -22,6 +21,22 @@ class ViewController: UIViewController {
     @IBOutlet weak var betAfterWinningTextField: UITextField!
     @IBOutlet weak var betAfterLosingTextField: UITextField!
     @IBOutlet weak var roundsBeforeEnteringTextField: UITextField!
+
+    @IBOutlet weak var bankrollLabel: UILabel!
+    @IBOutlet weak var totalPlayerLabel: UILabel!
+    @IBOutlet weak var totalBankerLabel: UILabel!
+    @IBOutlet weak var totalTieLabel: UILabel!
+    @IBOutlet weak var numberOfShoesBetOnLabel: UILabel!
+
+    private var keyboardIsShowing = false
+
+    lazy var resultLabels = [
+        bankrollLabel,
+        totalPlayerLabel,
+        totalBankerLabel,
+        totalTieLabel,
+        numberOfShoesBetOnLabel
+    ]
 
     lazy var allTextFields = [
         bankrollTextField,
@@ -40,6 +55,18 @@ class ViewController: UIViewController {
 
     let game = BacarratGame()
     let userDefaults = UserDefaults.standard
+    private var isExecuting = false {
+        didSet {
+            simulateButton.setTitle(isExecuting ? "Stop" : "Run Simulation", for: .normal)
+            if isExecuting {
+                spinner.startAnimating()
+                spinner.isHidden = false
+            } else {
+                spinner.stopAnimating()
+                spinner.isHidden = true
+            }
+        }
+    }
 
     let bankrollKey = "bankroll"
     let shoesKey = "shoes"
@@ -61,6 +88,8 @@ class ViewController: UIViewController {
             $0!.delegate = self
             configureKeyboardToolbar(in: $0!)
         }
+        game.viewController = self
+        showOrHideResultLabels(hide: true)
     }
 
     func configureKeyboardToolbar(in textField: UITextField) {
@@ -77,32 +106,37 @@ class ViewController: UIViewController {
     }
 
     @IBAction func simulateTapped(_ sender: UIButton) {
+        guard !isExecuting else {
+            return game.workItem.cancel()
+        }
         do {
             try setVariables()
         } catch {
             return showAlert()
         }
         setUserDefaults()
-        spinner.isHidden = false
-        spinner.startAnimating()
-        simulateButton.isHidden = true
+        showOrHideResultLabels(hide: true)
+        isExecuting = true
+        game.runAsync()
+    }
 
-        let group = DispatchGroup()
-        group.enter()
-        DispatchQueue.global().async {
-            self.game.run(group: group)
-        }
-
-        group.notify(queue: .main) {
-            self.simulateButton.isHidden = false
-            self.spinner.stopAnimating()
-            self.bankrollLabel.text = "End bankroll: \(self.game.betManager.bankroll)"
-        }
-
+    func done() {
+        isExecuting = false
+        let formatter = NumberFormatter()
+        formatter.locale = .current
+        formatter.numberStyle = .currency
+        let bankrollString = formatter.string(from: game.betManager.bankroll as NSNumber)!
+        bankrollLabel.text = "End bankroll: \(bankrollString)"
+        totalPlayerLabel.text = "Total player: \(game.totalPlayer)"
+        totalBankerLabel.text = "Total banker: \(game.totalBanker)"
+        totalTieLabel.text = "Total tie: \(game.totalTie)"
+        numberOfShoesBetOnLabel.text = "Number of shoes bet on: \(game.numberOfShoesBetOn)"
+        showOrHideResultLabels(hide: false)
     }
 
     private func setVariables() throws {
-        guard let shoes = Int(shoesTextField.text ?? ""),
+        guard let bankroll = Double(bankrollTextField.text ?? ""),
+              let shoes = Int(shoesTextField.text ?? ""),
               let startMultiplier = Double(startMultiplierTextField.text ?? ""),
               let endMultiplier = Double(endMultiplierTextField.text ?? ""),
               let percentIncreaseBet = Double(percentIncreaseBetTextField.text ?? ""),
@@ -114,6 +148,7 @@ class ViewController: UIViewController {
               else {
             throw NSError(domain: "", code: -1, userInfo: [:])
         }
+        game.betManager.bankroll = bankroll
         game.shoes = shoes
         game.startMultiplier = startMultiplier
         game.endMultiplier = endMultiplier
@@ -160,6 +195,9 @@ class ViewController: UIViewController {
         userDefaults.setValue(game.roundsBeforeEntering, forKey: roundsBeforeEnteringKey)
     }
 
+    private func showOrHideResultLabels(hide: Bool) {
+        resultLabels.forEach { $0?.isHidden = hide }
+    }
 }
 
 extension ViewController: UITextFieldDelegate {

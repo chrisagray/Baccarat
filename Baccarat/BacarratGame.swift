@@ -5,7 +5,7 @@
 //  Created by Chris Gray on 6/26/21.
 //
 
-import Foundation
+import UIKit
 
 class BacarratGame {
     // MARK: Properties
@@ -25,9 +25,9 @@ class BacarratGame {
     private var shoe = Shoe(decks: [])
     private var player = Person()
     private var banker = Person()
-    private var totalPlayer = 0
-    private var totalBanker = 0
-    private var totalTie = 0
+    private(set) var totalPlayer = 0
+    private(set) var totalBanker = 0
+    private(set) var totalTie = 0
     private var totalPlayerForShoe = 0
     private var totalBankerForShoe = 0
     private var totalTieForShoe = 0
@@ -51,10 +51,24 @@ class BacarratGame {
     private var bankrollHit3Percent = false
     private lazy var newBankroll = betManager.bankroll
     var simulating = false
+    weak var viewController: ViewController?
 
-    func run(group: DispatchGroup) {
+    var workItem: DispatchWorkItem!
+
+    func runAsync() {
+        workItem = DispatchWorkItem {
+            self.run()
+        }
+        DispatchQueue.global().async(execute: workItem)
+    }
+
+    func run() {
+        resetStats()
         simulating = true
         for _ in 0..<shoes {
+            guard !workItem.isCancelled else {
+                break
+            }
             runSimulations()
         }
         simulating = false
@@ -67,7 +81,20 @@ class BacarratGame {
         print("end bankroll: \(betManager.bankroll)")
         print("number of shoes bet on: \(numberOfShoesBetOn)")
 
-        group.leave()
+        DispatchQueue.main.async {
+            self.viewController?.done()
+        }
+    }
+
+    private func resetStats() {
+        totalPlayer = 0
+        totalBanker = 0
+        totalTie = 0
+        numberOfShoesBetOn = 0
+        totalRoundsPlayedInEntirety = 0
+        totalBetsMadeInEntirety = 0
+        bankrollHit3Percent = false
+        newBankroll = betManager.bankroll
     }
 
     private func runSimulations() {
