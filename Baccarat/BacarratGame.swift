@@ -160,32 +160,7 @@ class BacarratGame {
     }
 
     private func makeBets() {
-//        betManager.makeBet(amount: 100, for: .player)
-
-        // 10 bets
-
-//        if inA10BetStreak {
-//            makeBet()
-//        } else {
-//            // At least x rounds played before betting.
-//            guard totalRoundsPlayedForShoe > 40 else {
-//                return
-//            }
-//            // Need to be able to make 10 bets
-//            if shoe.totalCards >= 50 {
-//                let multiplier = betOnShoe ? 2 : 3
-//                let betOnBanker = totalPlayerForShoe >= totalBankerForShoe * multiplier
-//                let betOnPlayer = totalBankerForShoe >= totalPlayerForShoe * multiplier
-//                if betOnPlayer || betOnBanker {
-//                    inA10BetStreak = true
-//                    betOnShoe = true
-//                    currentlyBettingOn = betOnPlayer ? .player : .banker
-//                    makeBet()
-//                }
-//            }
-//        }
-
-        guard totalRoundsPlayedForShoe >= 10 else {
+        guard totalRoundsPlayedForShoe >= roundsBeforeEntering else {
             return
         }
         let multiplier: Double = betOnShoe ? endMultiplier : startMultiplier
@@ -196,16 +171,9 @@ class BacarratGame {
             currentlyBettingOn = betOnPlayer ? .player : .banker
             makeBet()
         }
-
-        // Need to be able to make 10 bets
-//        if shoe.totalCards >= 50 {
-//
-//        }
     }
 
     private func makeBet() {
-//        let multiplier = currentlyBettingOn == .banker ? totalPlayerForShoe / totalBankerForShoe : totalBankerForShoe / totalPlayerForShoe
-//        let bet: Double = 100 //multiplier == 3 ? 100 : multiplier == 4 ? 1000 : multiplier >= 5 ? 10000 : 0
         var bet = mainBet
         if betManager.bankroll > newBankroll * (1 + percentIncreaseBet/100) {
             newBankroll = betManager.bankroll
@@ -213,14 +181,6 @@ class BacarratGame {
         } else if betManager.bankroll < newBankroll * (1 - percentDecreaseBet/100) {
             bet = betAfterLosing
         }
-//        if betManager.bankroll > 102000 {
-//            bankrollGreaterThan102k = true
-//        }
-//        if bankrollGreaterThan102k {
-//            bet = betManager.bankroll < 102000 ? 1000 : betManager.bankroll > 105000 ? 50 : 100
-//        } else {
-//            bet = betManager.bankroll < 99000 ? 1000 : 100 //betManager.bankroll > 101000 ? 50 : 100
-//        }
         betManager.makeBet(amount: bet, for: currentlyBettingOn)
         totalBetsMade += 1
         totalBetsMadeInEntirety += 1
