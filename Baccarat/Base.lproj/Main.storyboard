@@ -219,7 +219,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="urO-9k-UL6">
-                                <rect key="frame" x="113.00000000000001" y="559" width="188.33333333333337" height="161.66666666666663"/>
+                                <rect key="frame" x="113.00000000000001" y="559" width="188.33333333333337" height="105"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="kg3-fG-fcU">
                                         <rect key="frame" x="29.666666666666657" y="0.0" width="129" height="20"/>
@@ -246,26 +246,14 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Total player:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TQ9-Nh-CbQ">
-                                        <rect key="frame" x="47.999999999999993" y="56.333333333333378" width="92.333333333333314" height="20.333333333333336"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Total banker:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q5d-0R-2oR">
-                                        <rect key="frame" x="45" y="84.666666666666629" width="98" height="20.333333333333329"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Total tie:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0av-vJ-6a9">
-                                        <rect key="frame" x="61.666666666666664" y="113" width="64.666666666666686" height="20.333333333333343"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Number of shoes bet on:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4vV-Xb-DFj">
-                                        <rect key="frame" x="0.0" y="141.33333333333337" width="188.33333333333334" height="20.333333333333343"/>
+                                        <rect key="frame" x="0.0" y="56.333333333333378" width="188.33333333333334" height="20.333333333333336"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mean Std dev" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yhH-LU-Xhc">
+                                        <rect key="frame" x="41.666666666666657" y="84.666666666666629" width="105" height="20.333333333333329"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -298,6 +286,7 @@
                         <outlet property="betAfterWinningTextField" destination="K84-bk-gGW" id="8pl-AI-Q7a"/>
                         <outlet property="endMultiplierTextField" destination="dkv-Zq-1bi" id="zHw-Jd-inA"/>
                         <outlet property="mainBetTextField" destination="onJ-8q-q8V" id="gFa-tB-UUc"/>
+                        <outlet property="meanStandardDeviationLabel" destination="yhH-LU-Xhc" id="Afp-3S-0mK"/>
                         <outlet property="numberOfShoesBetOnLabel" destination="4vV-Xb-DFj" id="9x2-3W-jxz"/>
                         <outlet property="percentDecreaseBetTextField" destination="sNA-Wm-efr" id="aa2-dr-2ZQ"/>
                         <outlet property="percentIncreaseBetTextField" destination="0XZ-Em-heE" id="1pQ-vQ-qBj"/>
@@ -306,9 +295,6 @@
                         <outlet property="simulateButton" destination="rSP-kp-rer" id="BSS-Gb-1GS"/>
                         <outlet property="spinner" destination="8LT-2K-KG4" id="OUx-hS-bHn"/>
                         <outlet property="startMultiplierTextField" destination="cSU-yK-YXg" id="B0l-x2-Qwu"/>
-                        <outlet property="totalBankerLabel" destination="Q5d-0R-2oR" id="QpV-mS-aaf"/>
-                        <outlet property="totalPlayerLabel" destination="TQ9-Nh-CbQ" id="RPu-Mg-aQJ"/>
-                        <outlet property="totalTieLabel" destination="0av-vJ-6a9" id="IvN-cr-aXX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

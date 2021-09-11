@@ -23,19 +23,15 @@ class ViewController: UIViewController {
     @IBOutlet weak var roundsBeforeEnteringTextField: UITextField!
 
     @IBOutlet weak var bankrollLabel: UILabel!
-    @IBOutlet weak var totalPlayerLabel: UILabel!
-    @IBOutlet weak var totalBankerLabel: UILabel!
-    @IBOutlet weak var totalTieLabel: UILabel!
     @IBOutlet weak var numberOfShoesBetOnLabel: UILabel!
+    @IBOutlet weak var meanStandardDeviationLabel: UILabel!
 
     private var keyboardIsShowing = false
 
     lazy var resultLabels = [
         bankrollLabel,
-        totalPlayerLabel,
-        totalBankerLabel,
-        totalTieLabel,
-        numberOfShoesBetOnLabel
+        numberOfShoesBetOnLabel,
+        meanStandardDeviationLabel
     ]
 
     lazy var allTextFields = [
@@ -124,14 +120,19 @@ class ViewController: UIViewController {
         isExecuting = false
         let formatter = NumberFormatter()
         formatter.locale = .current
-        formatter.numberStyle = .currency
+        formatter.maximumFractionDigits = 2
         let bankrollString = formatter.string(from: game.betManager.bankroll as NSNumber)!
         bankrollLabel.text = "End bankroll: \(bankrollString)"
-        totalPlayerLabel.text = "Total player: \(game.totalPlayer)"
-        totalBankerLabel.text = "Total banker: \(game.totalBanker)"
-        totalTieLabel.text = "Total tie: \(game.totalTie)"
         numberOfShoesBetOnLabel.text = "Number of shoes bet on: \(game.numberOfShoesBetOn)"
         showOrHideResultLabels(hide: false)
+        meanStandardDeviationLabel.text = """
+        Average player: \(game.averagePlayer)
+        Average banker: \(game.averageBanker)
+        Average tie: \(game.averageTie)
+        Std dev player: \(formatter.string(from: game.getStandardDeviation(for: .player) as NSNumber)!)
+        Std dev banker: \(formatter.string(from: game.getStandardDeviation(for: .banker) as NSNumber)!)
+        Std dev tie: \(formatter.string(from: game.getStandardDeviation(for: .tie) as NSNumber)!)
+        """
     }
 
     private func setVariables() throws {

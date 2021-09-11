@@ -52,6 +52,46 @@ class BacarratGame {
     private lazy var newBankroll = betManager.bankroll
     var simulating = false
     weak var viewController: ViewController?
+    private var playerNumbers: [Int] = []
+    private var bankerNumbers: [Int] = []
+    private var tieNumbers: [Int] = []
+
+    var averagePlayer: Double {
+        Double(totalPlayer) / Double(shoes)
+    }
+
+    var averageBanker: Double {
+        Double(totalBanker) / Double(shoes)
+    }
+
+    var averageTie: Double {
+        Double(totalTie) / Double(shoes)
+    }
+
+    enum Bet {
+        case player, banker, tie
+    }
+
+    func getStandardDeviation(for bet: Bet) -> Double {
+        var array: [Int]
+        var average: Double
+        switch bet {
+        case .player:
+            array = playerNumbers
+            average = averagePlayer
+        case .banker:
+            array = bankerNumbers
+            average = averageBanker
+        case .tie:
+            array = tieNumbers
+            average = averageTie
+        }
+        var sum = 0.0
+        array.forEach {
+            sum += pow(Double($0) - average, 2)
+        }
+        return sum / Double(array.count - 1)
+    }
 
     var workItem: DispatchWorkItem!
 
@@ -101,6 +141,9 @@ class BacarratGame {
         resetShoe()
         oneShoe()
         print("bankroll: \(betManager.bankroll)")
+        playerNumbers.append(totalPlayerForShoe)
+        bankerNumbers.append(totalBankerForShoe)
+        tieNumbers.append(totalTieForShoe)
         totalPlayer += totalPlayerForShoe
         totalBanker += totalBankerForShoe
         totalTie += totalTieForShoe
